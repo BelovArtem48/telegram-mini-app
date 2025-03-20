@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-приложение для недвижимости</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Добавить объект недвижимости</h1>
+    <form id="propertyForm">
+        <div class="form-group">
+            <label for="name">Название объекта:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="photos">Фотографии:</label>
+            <input type="file" id="photos" name="photos" multiple accept="image/*">
+        </div>
+        <div class="form-group">
+            <label for="documents">Документы:</label>
+            <input type="file" id="documents" name="documents" multiple accept=".pdf,.doc,.docx">
+        </div>
+        <button type="submit">Добавить объект</button>
+    </form>
+
+    <script>
+        document.getElementById('propertyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('name').value);
+            formData.append('description', document.getElementById('description').value);
+
+            // Добавляем фотографии
+            const photos = document.getElementById('photos').files;
+            for (let i = 0; i < photos.length; i++) {
+                formData.append('photos', photos[i]);
+            }
+
+            // Добавляем документы
+            const documents = document.getElementById('documents').files;
+            for (let i = 0; i < documents.length; i++) {
+                formData.append('documents', documents[i]);
+            }
+
+            // Отправляем данные на сервер
+            const response = await fetch('https://your-server-url.com/add-property', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Объект успешно добавлен!');
+            } else {
+                alert('Произошла ошибка при добавлении объекта.');
+            }
+        });
+    </script>
+</body>
+</html>
